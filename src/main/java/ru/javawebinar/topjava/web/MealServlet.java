@@ -16,6 +16,7 @@ import java.util.List;
 import org.slf4j.Logger;
 
 import static org.slf4j.LoggerFactory.getLogger;
+import static ru.javawebinar.topjava.util.MealsUtil.caloriesLimit;
 import static ru.javawebinar.topjava.util.MealsUtil.getFilteredWithExceeded;
 
 public class MealServlet extends HttpServlet{
@@ -51,7 +52,7 @@ public class MealServlet extends HttpServlet{
             } break;
             default: {
                 log.debug("forward to meals");
-                List<MealWithExceed> mealsWithExceeded = getFilteredWithExceeded(mealDAO.getAll(), LocalTime.MIN,LocalTime.MAX,2000);
+                List<MealWithExceed> mealsWithExceeded = getFilteredWithExceeded(mealDAO.getAll(), LocalTime.MIN,LocalTime.MAX,caloriesLimit);
                 req.setAttribute("meals",mealsWithExceeded);
                 req.getRequestDispatcher("/meals.jsp").forward(req, resp);
             }
