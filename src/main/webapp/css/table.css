@@ -1,0 +1,23 @@
+.tg  {
+    border-collapse:collapse;
+}
+.tg td {
+    font: normal 14px Arial,sans-serif;
+    padding:10px;overflow:hidden;
+    border: solid white;
+}
+.tg th {
+    font: bold 14px Arial,sans-serif;
+    color:white;
+    padding: 10px 20px;overflow:hidden;
+    border: solid white;
+    background-color:black;
+}
+.green {
+    color: green;
+    background-color: rgba(89,255,87,0.58);
+}
+.red {
+    color: red;
+    background-color: rgba(255,0,21,0.31);
+}
