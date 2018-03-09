@@ -7,7 +7,9 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Objects;
@@ -68,6 +70,20 @@ public class MealServlet extends HttpServlet {
                         controller.get(getId(request));
                 request.setAttribute("meal", meal);
                 request.getRequestDispatcher("/mealForm.jsp").forward(request, response);
+                break;
+            case "filter":
+                log.info("getFilteredByDateAndTime");
+                String startDate = request.getParameter("startDate");
+                String startTime = request.getParameter("startTime");
+                String endDate = request.getParameter("endDate");
+                String endTime = request.getParameter("endTime");
+                request.setAttribute("meals", controller.getFilteredByDateAndTime(
+                        (startDate == null || startDate.isEmpty())? LocalDate.MIN : LocalDate.parse(startDate),
+                        (startTime == null || startTime.isEmpty())? LocalTime.MIN : LocalTime.parse(startTime),
+                        (endDate == null || endDate.isEmpty())? LocalDate.MAX : LocalDate.parse(endDate),
+                        (endTime == null || endTime.isEmpty())? LocalTime.MAX : LocalTime.parse(endTime))
+                );
+                request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;
             case "all":
             default:

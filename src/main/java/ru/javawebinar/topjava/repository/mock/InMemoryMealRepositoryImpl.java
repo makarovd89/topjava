@@ -2,13 +2,16 @@ package ru.javawebinar.topjava.repository.mock;
 
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
+import ru.javawebinar.topjava.util.DateTimeUtil;
 import ru.javawebinar.topjava.util.MealsUtil;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Stream;
 import org.springframework.stereotype.Repository;
 
 import static java.util.Comparator.comparing;
@@ -51,10 +54,21 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
 
     @Override
     public List<Meal> getAll(int userId) {
-        Map<Integer, Meal> meals = repository.get(userId);
-        return meals == null ? Collections.emptyList() : meals.values().stream()
-                .sorted(comparing(Meal::getDateTime).reversed())
+        return getAllAsStream(userId)
                 .collect(toList());
+    }
+
+    @Override
+    public List<Meal> getFilteredByDate(LocalDate startDate, LocalDate endDate, int userId) {
+        return getAllAsStream(userId)
+                .filter(m -> DateTimeUtil.isBetween(m.getDate(), startDate, endDate))
+                .collect(toList());
+    }
+
+    private Stream<Meal> getAllAsStream(int userId){
+        Map<Integer, Meal> meals = repository.get(userId);
+        return meals.values().stream()
+                .sorted(comparing(Meal::getDateTime).reversed());
     }
 }
 
