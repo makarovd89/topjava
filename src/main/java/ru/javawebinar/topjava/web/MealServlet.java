@@ -84,10 +84,10 @@ public class MealServlet extends HttpServlet {
                 String endDate = request.getParameter("endDate");
                 String endTime = request.getParameter("endTime");
                 request.setAttribute("meals", controller.getFilteredByDateAndTime(
-                        (startDate == null || startDate.isEmpty())? LocalDate.MIN : LocalDate.parse(startDate),
-                        (startTime == null || startTime.isEmpty())? LocalTime.MIN : LocalTime.parse(startTime),
-                        (endDate == null || endDate.isEmpty())? LocalDate.MAX : LocalDate.parse(endDate),
-                        (endTime == null || endTime.isEmpty())? LocalTime.MAX : LocalTime.parse(endTime))
+                        (startDate == null || startDate.isEmpty())? null : LocalDate.parse(startDate),
+                        (startTime == null || startTime.isEmpty())? null : LocalTime.parse(startTime),
+                        (endDate == null || endDate.isEmpty())? null : LocalDate.parse(endDate),
+                        (endTime == null || endTime.isEmpty())? null : LocalTime.parse(endTime))
                 );
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;
