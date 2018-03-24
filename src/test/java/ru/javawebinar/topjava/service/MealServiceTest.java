@@ -1,5 +1,8 @@
 package ru.javawebinar.topjava.service;
 
+import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.util.exception.NotFoundException;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.bridge.SLF4JBridgeHandler;
@@ -8,9 +11,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.util.exception.NotFoundException;
-
 import java.time.LocalDate;
 import java.time.Month;
 
