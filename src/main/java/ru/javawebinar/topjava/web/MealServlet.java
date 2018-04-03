@@ -1,7 +1,7 @@
 package ru.javawebinar.topjava.web;
 
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import ru.javawebinar.topjava.Profiles;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.web.meal.MealRestController;
 
@@ -22,19 +22,22 @@ import static ru.javawebinar.topjava.util.DateTimeUtil.parseLocalTime;
 
 public class MealServlet extends HttpServlet {
 
-    private ConfigurableApplicationContext springContext;
     private MealRestController mealController;
+    private ClassPathXmlApplicationContext appCtx;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        springContext = new ClassPathXmlApplicationContext("spring/spring-app.xml", "spring/spring-db.xml");
-        mealController = springContext.getBean(MealRestController.class);
+        appCtx = new ClassPathXmlApplicationContext();
+        appCtx.getEnvironment().setActiveProfiles(Profiles.REPOSITORY_IMPLEMENTATION,Profiles.getActiveDbProfile());
+        appCtx.setConfigLocations("spring/spring-app.xml","spring/spring-db.xml");
+        appCtx.refresh();
+        mealController = appCtx.getBean(MealRestController.class);
     }
 
     @Override
     public void destroy() {
-        springContext.close();
+        appCtx.close();
         super.destroy();
     }
 
