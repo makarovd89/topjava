@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.UserRepository;
@@ -20,6 +21,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
+@Transactional(readOnly = true)
 @Repository
 public class JdbcUserRepositoryImpl implements UserRepository {
     private static final BeanPropertyRowMapper<User> ROW_MAPPER = BeanPropertyRowMapper.newInstance(User.class);
@@ -62,6 +64,7 @@ public class JdbcUserRepositoryImpl implements UserRepository {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
+    @Transactional
     @Override
     public User save(User user) {
         BeanPropertySqlParameterSource parameterSource = new BeanPropertySqlParameterSource(user);
@@ -89,6 +92,7 @@ public class JdbcUserRepositoryImpl implements UserRepository {
         return user;
     }
 
+    @Transactional
     @Override
     public boolean delete(int id) {
         return jdbcTemplate.update("DELETE FROM users WHERE id=?", id) != 0;
@@ -135,10 +139,10 @@ public class JdbcUserRepositoryImpl implements UserRepository {
 
     private boolean equalsIgnoreRolesAndId(User u1, User u2){
         return !u1.getName().equals(u2.getName())
-        && !u1.getEmail().equals(u2.getEmail())
-        && !u1.getRegistered().equals(u2.getRegistered())
-        && u1.isEnabled() != u2.isEnabled()
-        && u1.getCaloriesPerDay() != u2.getCaloriesPerDay()
-        && u1.getPassword().equals(u2.getPassword());
+            && !u1.getEmail().equals(u2.getEmail())
+            && !u1.getRegistered().equals(u2.getRegistered())
+            && u1.isEnabled() != u2.isEnabled()
+            && u1.getCaloriesPerDay() != u2.getCaloriesPerDay()
+            && u1.getPassword().equals(u2.getPassword());
     }
 }
