@@ -13,10 +13,22 @@ public class UserTestData {
     public static final int ADMIN_ID = START_SEQ + 1;
 
     public static final User USER = new User(USER_ID, "User", "user@yandex.ru", "password", Role.ROLE_USER);
-    public static final User ADMIN = new User(ADMIN_ID, "Admin", "admin@gmail.com", "admin", Role.ROLE_ADMIN);
+    public static final User ADMIN = new User(ADMIN_ID, "Admin", "admin@gmail.com", "admin", Role.ROLE_ADMIN, Role.ROLE_USER);
+
+    public static User getWithRoleCanged() {
+        return new User(USER_ID, "User", "user@yandex.ru", "password", Role.ROLE_ADMIN);
+    }
+
+    public static User getWithRoleAdded() {
+        return new User(USER_ID, "User", "user@yandex.ru", "password", Role.ROLE_USER, Role.ROLE_ADMIN);
+    }
+
+    public static User getWithRoleUser() {
+        return new User(ADMIN_ID, "Admin", "admin@gmail.com", "admin", Role.ROLE_USER);
+    }
 
     public static void assertMatch(User actual, User expected) {
-        assertThat(actual).isEqualToIgnoringGivenFields(expected, "registered", "roles", "meals");
+        assertThat(actual).isEqualToIgnoringGivenFields(expected, "registered", "meals");
     }
 
     public static void assertMatch(Iterable<User> actual, User... expected) {
@@ -24,6 +36,6 @@ public class UserTestData {
     }
 
     public static void assertMatch(Iterable<User> actual, Iterable<User> expected) {
-        assertThat(actual).usingElementComparatorIgnoringFields("registered", "roles", "meals").isEqualTo(expected);
+        assertThat(actual).usingElementComparatorIgnoringFields("registered", "meals").isEqualTo(expected);
     }
 }

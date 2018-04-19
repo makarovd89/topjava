@@ -1,21 +1,22 @@
 package ru.javawebinar.topjava.service;
 
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.dao.DataAccessException;
+import ru.javawebinar.topjava.Profiles;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.JpaUtil;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import javax.validation.ConstraintViolationException;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static ru.javawebinar.topjava.UserTestData.*;
+import static ru.javawebinar.topjava.model.AbstractBaseEntity.START_SEQ;
 
 public abstract class AbstractUserServiceTest extends AbstractServiceTest {
 
@@ -25,13 +26,21 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
     @Autowired
     private CacheManager cacheManager;
 
-    @Autowired
-    protected JpaUtil jpaUtil;
+    public abstract static class AbstractOrmUserServiceTest extends AbstractUserServiceTest{
+        @Autowired
+        protected JpaUtil jpaUtil;
+
+        @Before
+        @Override
+        public void setUp() throws Exception {
+            super.setUp();
+            jpaUtil.clear2ndLevelHibernateCache();
+        }
+    }
 
     @Before
     public void setUp() throws Exception {
         cacheManager.getCache("users").clear();
-        jpaUtil.clear2ndLevelHibernateCache();
     }
 
     @Test
@@ -91,7 +100,32 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
     }
 
     @Test
+    public void addRole(){
+        User user = service.get(START_SEQ);
+        user.setRoles(EnumSet.of(Role.ROLE_USER, Role.ROLE_ADMIN));
+        service.update(user);
+        assertMatch(user, getWithRoleAdded());
+    }
+
+    @Test
+    public void changeRole(){
+        User user = service.get(START_SEQ);
+        user.setRoles(EnumSet.of(Role.ROLE_ADMIN));
+        service.update(user);
+        assertMatch(user, getWithRoleCanged());
+    }
+
+    @Test
+    public void removeRole(){
+        User user = service.get(START_SEQ + 1);
+        user.setRoles(EnumSet.of(Role.ROLE_USER));
+        service.update(user);
+        assertMatch(user, getWithRoleUser());
+    }
+
+    @Test
     public void testValidation() throws Exception {
+        Assume.assumeTrue(!environment.acceptsProfiles(Profiles.JDBC));
         validateRootCause(() -> service.create(new User(null, "  ", "mail@yandex.ru", "password", Role.ROLE_USER)), ConstraintViolationException.class);
         validateRootCause(() -> service.create(new User(null, "User", "  ", "password", Role.ROLE_USER)), ConstraintViolationException.class);
         validateRootCause(() -> service.create(new User(null, "User", "mail@yandex.ru", "  ", Role.ROLE_USER)), ConstraintViolationException.class);
