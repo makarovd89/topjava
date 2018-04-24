@@ -1,12 +1,13 @@
 package ru.javawebinar.topjava.web.user;
 
-import org.junit.Test;
-import org.springframework.http.MediaType;
 import ru.javawebinar.topjava.TestUtil;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.web.AbstractControllerTest;
 import ru.javawebinar.topjava.web.json.JsonUtil;
+
+import org.junit.Test;
+import org.springframework.http.MediaType;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -30,7 +31,7 @@ public class ProfileRestControllerTest extends AbstractControllerTest {
     @Test
     public void testDelete() throws Exception {
         mockMvc.perform(delete(REST_URL))
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
         assertMatch(userService.getAll(), ADMIN);
     }
 
