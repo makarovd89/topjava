@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="fn" uri="http://topjava.javawebinar.ru/functions" %>
@@ -49,12 +49,12 @@
         </thead>
         <c:forEach items="${meals}" var="meal">
             <jsp:useBean id="meal" type="ru.javawebinar.topjava.to.MealWithExceed"/>
-            <tr data-mealExceed="${meal.exceed}">
+            <tr data-mealExceed="${meal.exceed}" id="${meal.id}">
                 <td>${fn:formatDateTime(meal.dateTime)}</td>
                 <td>${meal.description}</td>
                 <td>${meal.calories}</td>
-                <td><a><span class="fa fa-pencil"></span></a></td>
-                <td><a class="delete" id="${meal.id}"><span class="fa fa-remove"></span></a></td>
+                <td><span class="fa fa-pencil"></span></td>
+                <td class="delete"><span class="fa fa-remove"></span></td>
             </tr>
         </c:forEach>
     </table>
