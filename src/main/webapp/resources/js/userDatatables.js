@@ -55,3 +55,10 @@ function toggle(is_enabled, id) {
         }
     });
 }
+
+function updateTable() {
+    $.get(ajaxUrl, function (data) {
+        console.debug(data);
+        datatableApi.clear().rows.add(data).draw();
+    });
+}

@@ -34,3 +34,25 @@ $(function () {
     });
     makeEditable();
 });
+
+function updateTable() {
+    $.get(ajaxUrl,
+        {
+            startDate: $("[name='startDate']").val(),
+            startTime: $("[name='startTime']").val(),
+            endDate: $("[name='endDate']").val(),
+            endTime: $("[name='endTime']").val()
+        },
+        function (data) {
+            console.debug(data);
+            console.debug(ajaxUrl);
+            datatableApi.clear().rows.add(data).draw();
+        });
+}
+
+function resetFilter() {
+    $("[name='startDate']").val("");
+    $("[name='startTime']").val("");
+    $("[name='endDate']").val("");
+    $("[name='endTime']").val("");
+}
