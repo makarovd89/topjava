@@ -12,7 +12,6 @@
 <div class="jumbotron pt-4">
     <div class="container">
         <h3><spring:message code="meal.title"/></h3>
-
         <%--https://getbootstrap.com/docs/4.0/components/card/--%>
         <div class="row">
             <div class="col-7">
@@ -91,8 +90,7 @@
 
                     <div class="form-group">
                         <label for="dateTime" class="col-form-label"><spring:message code="meal.dateTime"/></label>
-                        <input type="datetime-local" class="form-control" id="dateTime" name="dateTime"
-                               placeholder="<spring:message code="meal.dateTime"/>">
+                        <input id="dateTime" type="date/time/datetime-local" name="dateTime"/>
                     </div>
 
                     <div class="form-group">

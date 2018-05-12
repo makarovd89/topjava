@@ -15,6 +15,9 @@ function clearFilter() {
 }
 
 $(function () {
+    jQuery('#dateTime').datetimepicker({
+        format:'Y-m-d\\TH:i'
+    });
     datatableApi = $("#datatable").DataTable({
         "ajax": {
             "url": ajaxUrl,
