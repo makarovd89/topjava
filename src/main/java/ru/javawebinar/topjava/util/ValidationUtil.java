@@ -6,6 +6,7 @@ import ru.javawebinar.topjava.util.exception.IllegalRequestDataException;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 public class ValidationUtil {
+    public static final String DUPLICATED_EMAIL_MSG = "user.email.duplicated";
 
     private ValidationUtil() {
     }
@@ -57,14 +58,13 @@ public class ValidationUtil {
 
     public static String[] getErrorResponse(BindingResult result) {
         return result.getFieldErrors().stream()
-                .map(
-                        fe -> {
-                            String msg = fe.getDefaultMessage();
-                            if (!msg.startsWith(fe.getField())) {
-                                msg = fe.getField() + ' ' + msg;
-                            }
-                            return msg;
-                        })
+                .map(fe -> {
+                    String msg = fe.getDefaultMessage();
+                    if (!msg.startsWith(fe.getField())) {
+                        msg = fe.getField() + ' ' + msg;
+                    }
+                    return msg;
+                })
                 .toArray(String[]::new);
     }
 }

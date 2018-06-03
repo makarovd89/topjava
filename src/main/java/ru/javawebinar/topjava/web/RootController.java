@@ -1,5 +1,11 @@
 package ru.javawebinar.topjava.web;
 
+import ru.javawebinar.topjava.AuthorizedUser;
+import ru.javawebinar.topjava.to.UserTo;
+import ru.javawebinar.topjava.util.UserUtil;
+import ru.javawebinar.topjava.web.user.AbstractUserController;
+
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -7,12 +13,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.support.SessionStatus;
-import ru.javawebinar.topjava.AuthorizedUser;
-import ru.javawebinar.topjava.to.UserTo;
-import ru.javawebinar.topjava.util.UserUtil;
-import ru.javawebinar.topjava.web.user.AbstractUserController;
-
 import javax.validation.Valid;
+
+import static ru.javawebinar.topjava.util.ValidationUtil.DUPLICATED_EMAIL_MSG;
 
 @Controller
 public class RootController extends AbstractUserController {
@@ -48,11 +51,15 @@ public class RootController extends AbstractUserController {
     public String updateProfile(@Valid UserTo userTo, BindingResult result, SessionStatus status) {
         if (result.hasErrors()) {
             return "profile";
-        } else {
+        }
+        try {
             super.update(userTo, AuthorizedUser.id());
             AuthorizedUser.get().update(userTo);
             status.setComplete();
             return "redirect:meals";
+        } catch (DataIntegrityViolationException ex) {
+            result.rejectValue("email", DUPLICATED_EMAIL_MSG);
+            return "profile";
         }
     }
 
@@ -68,10 +75,15 @@ public class RootController extends AbstractUserController {
         if (result.hasErrors()) {
             model.addAttribute("register", true);
             return "profile";
-        } else {
+        }
+        try {
             super.create(UserUtil.createNewFromTo(userTo));
             status.setComplete();
             return "redirect:login?message=app.registered&username=" + userTo.getEmail();
+        } catch (DataIntegrityViolationException ex) {
+            result.rejectValue("email", DUPLICATED_EMAIL_MSG);
+            model.addAttribute("register", true);
+            return "profile";
         }
     }
 }
